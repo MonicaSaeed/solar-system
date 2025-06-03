@@ -1,38 +1,37 @@
-name: CI Workflow
+name: Solar system App
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-      - 'feature/*'
-
+      - "feature/*"
 jobs:
   unit-testing:
-    name: Unit Testing
+    name: My Unit testing
     strategy:
       matrix:
-        node_version: [18, 20]
+        node_version: [18, 22]
         operating_system: [ubuntu-latest, macos-latest]
-    
     runs-on: ${{ matrix.operating_system }}
-    
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
-
+        uses: actions/checkout/@v4.2.2
       - name: Setup Node.js environment
         uses: actions/setup-node@v4.4.0
         with:
           node-version: ${{ matrix.node_version }}
+      - name: install npm
+        run: npm i
 
-      - name: Install npm dependencies
-        run: npm install
-
-      - name: Run unit tests
+      - name: run unit tests
+        # id: may-fail
         run: npm test
 
-      - uses: actions/upload-artifact@v4
-        with: 
-            name: mocha-test-results
-            path: test-results.xml
+      - name: using Artifacts
+        uses: actions/upload-artifact@v4
+        # if: steps.may-fail == 'failure' || steps.may-fail == 'success'
+        if: failure() || success()
+        with:
+          name: moch-test-result
+          path: test-results.xml
