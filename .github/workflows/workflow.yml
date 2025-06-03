@@ -11,7 +11,7 @@ jobs:
     name: My Unit testing
     strategy:
       matrix:
-        node_version: [18, 22]
+        node_version: [18, 20]
         operating_system: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.operating_system }}
     steps:
